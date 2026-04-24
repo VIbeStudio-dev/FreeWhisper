@@ -1,0 +1,28 @@
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Rust / Tauri
+frontend/src-tauri/target/
+frontend/src-tauri/gen/
+
+# Python
+backend/__pycache__/
+backend/**/*.pyc
+backend/.venv/
+backend/venv/
+
+# faster-whisper / HuggingFace cached model weights (large)
+**/.cache/
+**/models/
+
+# Claude Code local settings
+.claude/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log

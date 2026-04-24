@@ -1,0 +1,196 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 280px;
+  height: 52px;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.pill {
+  width: 280px;
+  height: 52px;
+  border-radius: 26px;
+  background: rgba(12, 12, 14, 0.93);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  cursor: default;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle top-left sheen */
+.pill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+/* ── state: recording ── */
+.pill.recording {
+  border-color: rgba(239, 68, 68, 0.65);
+  box-shadow: 0 0 22px rgba(239, 68, 68, 0.22), inset 0 0 18px rgba(239, 68, 68, 0.04);
+}
+
+/* ── state: processing ── */
+.pill.processing {
+  border-color: rgba(251, 191, 36, 0.65);
+  box-shadow: 0 0 22px rgba(251, 191, 36, 0.18);
+}
+
+/* ── state: error ── */
+.pill.error {
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+/* ── mic button ── */
+#mic-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  padding: 0;
+  z-index: 2;
+}
+#mic-btn:hover { background: rgba(255, 255, 255, 0.12); }
+#mic-btn:active { transform: scale(0.92); }
+.pill.recording #mic-btn { background: rgba(239, 68, 68, 0.18); }
+.pill.recording #mic-btn:hover { background: rgba(239, 68, 68, 0.28); }
+
+#mic-icon {
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.25s ease;
+  pointer-events: none;
+}
+.pill.recording #mic-icon { color: rgba(239, 68, 68, 0.95); }
+.pill.processing #mic-icon { color: rgba(251, 191, 36, 0.9); }
+
+/* ── model dropdown ── */
+#model-select {
+  appearance: none;
+  -webkit-appearance: none;
+  flex-shrink: 0;
+  height: 24px;
+  padding: 0 20px 0 9px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path d='M2 4l3 3 3-3' stroke='rgba(255,255,255,0.55)' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  color: rgba(255, 255, 255, 0.78);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  z-index: 2;
+}
+#model-select:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+#model-select:focus {
+  border-color: rgba(99, 102, 241, 0.55);
+}
+#model-select option {
+  background: #18181b;
+  color: #e4e4e7;
+}
+
+/* ── drag handle area (everything except mic button) ── */
+.drag-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  cursor: grab;
+  min-width: 0;
+}
+.drag-area:active { cursor: grabbing; }
+
+/* ── status label ── */
+#status {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.01em;
+  flex: 1;
+  white-space: nowrap;
+}
+
+/* ── waveform bars (recording only) ── */
+.wave-container {
+  display: flex;
+  align-items: center;
+  gap: 2.5px;
+  height: 20px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+.pill.recording .wave-container { opacity: 1; }
+
+.bar {
+  width: 2.5px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(239, 68, 68, 0.8);
+  animation: wave 0.85s ease-in-out infinite;
+}
+.bar:nth-child(1) { animation-delay: 0.00s; }
+.bar:nth-child(2) { animation-delay: 0.12s; }
+.bar:nth-child(3) { animation-delay: 0.24s; }
+.bar:nth-child(4) { animation-delay: 0.12s; }
+.bar:nth-child(5) { animation-delay: 0.00s; }
+
+@keyframes wave {
+  0%,
+  100% { height: 4px; }
+  50%  { height: 16px; }
+}
+
+/* ── spinner (processing only) ── */
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid rgba(251, 191, 36, 0.25);
+  border-top-color: rgba(251, 191, 36, 0.9);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+  display: none;
+}
+.pill.processing .spinner { display: block; }
+.pill.processing .wave-container { display: none; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

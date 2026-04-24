@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FreeWhisper</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="pill" class="pill idle">
+      <button id="mic-btn" type="button" aria-label="Toggle dictation">
+        <svg id="mic-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <rect x="9" y="2" width="6" height="13" rx="3" fill="currentColor" />
+          <path d="M5 11v1a7 7 0 0 0 14 0v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" />
+          <line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          <line x1="8" y1="22" x2="16" y2="22" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </button>
+
+      <select id="model-select" aria-label="Model speed">
+        <option value="normal">Normal</option>
+        <option value="fast">Fast</option>
+      </select>
+
+      <div class="drag-area" data-tauri-drag-region>
+        <span id="status" data-tauri-drag-region>Ready</span>
+        <div class="wave-container" data-tauri-drag-region>
+          <div class="bar" data-tauri-drag-region></div>
+          <div class="bar" data-tauri-drag-region></div>
+          <div class="bar" data-tauri-drag-region></div>
+          <div class="bar" data-tauri-drag-region></div>
+          <div class="bar" data-tauri-drag-region></div>
+        </div>
+        <div class="spinner" data-tauri-drag-region></div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
