@@ -12,11 +12,11 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 log = logging.getLogger(__name__)
 
 # Mapping from UI label → actual faster-whisper model id.
-# "fast"    → small  (~500 MB int8)   ~3–4× faster than large-v3 on CPU
-# "normal"  → large-v3 (~1.5 GB int8)  best accuracy
+# "fast"    → small    (~500 MB int8)  good accuracy, decent speed
+# "fast2x"  → tiny.en  (~75 MB int8)   ~2× faster than fast, English-only
 MODEL_MAP = {
     "fast": "small",
-    "normal": "large-v3",
+    "fast2x": "tiny.en",
 }
 
 _models: dict[str, WhisperModel] = {}
@@ -24,7 +24,7 @@ _load_lock = Lock()
 
 
 def get_model(key: str) -> WhisperModel:
-    size = MODEL_MAP.get(key, "large-v3")
+    size = MODEL_MAP.get(key, "small")
     with _load_lock:
         if size not in _models:
             log.info("Loading %s model (first use downloads weights)...", size)
@@ -37,9 +37,9 @@ def get_model(key: str) -> WhisperModel:
 async def lifespan(app: FastAPI):
     # Preload BOTH models so neither mode has a cold-start / download delay
     # on first use. Fast (~500 MB) loads first because it's smaller.
-    log.info("Preloading fast + normal models (first run downloads ~2 GB total)...")
+    log.info("Preloading fast + fast2x models...")
+    get_model("fast2x")
     get_model("fast")
-    get_model("normal")
     log.info("All models ready.")
     yield
 
@@ -62,7 +62,7 @@ async def health():
 @app.post("/transcribe")
 async def transcribe(
     audio: UploadFile = File(...),
-    model: str = Form("normal"),
+    model: str = Form("fast"),
 ):
     data = await audio.read()
     if not data:
@@ -75,13 +75,15 @@ async def transcribe(
         tmp_path = tmp.name
 
     try:
-        # Fast mode: smaller beam → noticeably lower latency.
-        beam = 1 if model == "fast" else 5
+        # Both modes use beam=1 for low latency; fast2x also disables
+        # cross-segment conditioning and uses tighter VAD for max speed.
+        is_2x = model == "fast2x"
         segments, info = m.transcribe(
             tmp_path,
-            beam_size=beam,
+            beam_size=1,
             vad_filter=True,
-            vad_parameters={"min_silence_duration_ms": 500},
+            vad_parameters={"min_silence_duration_ms": 300 if is_2x else 500},
+            condition_on_previous_text=not is_2x,
         )
         text = " ".join(s.text.strip() for s in segments).strip()
         log.info("[%s] (%s) %s", model, info.language, text[:80])

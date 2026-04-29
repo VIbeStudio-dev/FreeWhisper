@@ -21,7 +21,8 @@ body {
   background: rgba(12, 12, 14, 0.93);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: none;
+  border: 1.5px solid rgba(251, 191, 36, 0.85);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.18), 0 0 18px rgba(251, 191, 36, 0.22);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -59,35 +60,6 @@ body {
   border-color: rgba(239, 68, 68, 0.4);
 }
 
-/* ── mic button ── */
-#mic-btn {
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.05);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.1s ease;
-  padding: 0;
-  z-index: 2;
-}
-#mic-btn:hover { background: rgba(255, 255, 255, 0.12); }
-#mic-btn:active { transform: scale(0.92); }
-.pill.recording #mic-btn { background: rgba(239, 68, 68, 0.18); }
-.pill.recording #mic-btn:hover { background: rgba(239, 68, 68, 0.28); }
-
-#mic-icon {
-  color: rgba(255, 255, 255, 0.55);
-  transition: color 0.25s ease;
-  pointer-events: none;
-}
-.pill.recording #mic-icon { color: rgba(239, 68, 68, 0.95); }
-.pill.processing #mic-icon { color: rgba(251, 191, 36, 0.9); }
-
 /* ── model dropdown ── */
 #model-select {
   appearance: none;
@@ -96,7 +68,7 @@ body {
   height: 24px;
   padding: 0 20px 0 9px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: none;
   background-color: rgba(255, 255, 255, 0.05);
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path d='M2 4l3 3 3-3' stroke='rgba(255,255,255,0.55)' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
   background-repeat: no-repeat;
@@ -113,27 +85,57 @@ body {
 }
 #model-select:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.18);
 }
 #model-select:focus {
-  border-color: rgba(99, 102, 241, 0.55);
+  outline: none;
 }
 #model-select option {
   background: #18181b;
   color: #e4e4e7;
 }
 
-/* ── drag handle area (everything except mic button) ── */
+/* ── drag handle area ── */
 .drag-area {
   flex: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   height: 100%;
   cursor: grab;
   min-width: 0;
+  position: relative;
 }
 .drag-area:active { cursor: grabbing; }
+
+/* ── dictate button (mic ↔ waveform) ── */
+#wave-btn {
+  flex-shrink: 0;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 16px;
+  border: 1.5px solid rgba(251, 191, 36, 0.85);
+  background: #2a2a2e;
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease, min-width 0.2s ease;
+  z-index: 2;
+}
+#wave-btn:hover { background: #35353a; }
+#wave-btn:active { transform: scale(0.94); }
+#wave-btn:focus { outline: none; }
+.pill.recording #wave-btn { min-width: 90px; }
+
+#mic-icon {
+  color: rgb(251, 191, 36);
+  pointer-events: none;
+  display: block;
+}
+.pill.recording #mic-icon { display: none; }
 
 /* ── status label ── */
 #status {
@@ -142,39 +144,27 @@ body {
   font-weight: 500;
   color: rgba(255, 255, 255, 0.7);
   letter-spacing: 0.01em;
-  flex: 1;
+  flex-shrink: 0;
   white-space: nowrap;
 }
 
 /* ── waveform bars (recording only) ── */
 .wave-container {
-  display: flex;
+  display: none;
   align-items: center;
-  gap: 2.5px;
-  height: 20px;
-  opacity: 0;
-  transition: opacity 0.2s;
-  flex-shrink: 0;
+  justify-content: center;
+  gap: 3px;
+  height: 22px;
 }
+.pill.recording .wave-container { display: flex; }
 .pill.recording .wave-container { opacity: 1; }
 
 .bar {
-  width: 2.5px;
-  height: 4px;
+  width: 3px;
+  height: 5px;
   border-radius: 2px;
-  background: rgba(239, 68, 68, 0.8);
-  animation: wave 0.85s ease-in-out infinite;
-}
-.bar:nth-child(1) { animation-delay: 0.00s; }
-.bar:nth-child(2) { animation-delay: 0.12s; }
-.bar:nth-child(3) { animation-delay: 0.24s; }
-.bar:nth-child(4) { animation-delay: 0.12s; }
-.bar:nth-child(5) { animation-delay: 0.00s; }
-
-@keyframes wave {
-  0%,
-  100% { height: 4px; }
-  50%  { height: 16px; }
+  background: rgba(251, 191, 36, 0.9);
+  transition: height 0.06s linear;
 }
 
 /* ── spinner (processing only) ── */
