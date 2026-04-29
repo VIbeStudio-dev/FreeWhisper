@@ -1,0 +1,54 @@
+FreeWhisper Source-Available License v1.0
+Copyright (c) 2026 VIbeStudio-dev
+
+1. Grant
+You are granted a worldwide, royalty-free, non-exclusive license to use,
+copy, modify, and distribute this software and its source code, subject to
+the conditions below.
+
+2. Permitted use
+You may use the software for any purpose, including inside a business or
+other commercial setting (for example, using it as a personal productivity
+tool at work, on company hardware, or as part of an internal workflow).
+
+3. No sale, no monetization
+You may NOT, in whole or in part, modified or unmodified:
+  (a) sell, resell, rent, lease, or sublicense the software;
+  (b) charge any fee for access to, distribution of, or use of the software;
+  (c) bundle the software with a paid product or paid service in a way that
+      derives revenue, directly or indirectly, from the software itself;
+  (d) offer the software (or a derivative of it) as a paid hosted or
+      managed service.
+
+Voluntary donations that are unrelated to providing access to the software
+are not restricted by this clause.
+
+4. Redistribution
+You may redistribute the software and modified versions free of charge,
+provided that:
+  (a) this license file is included unchanged with the distribution;
+  (b) the copyright notice above is preserved;
+  (c) modified versions are clearly marked as modified.
+
+5. Trademarks
+This license does not grant rights to use the names, logos, or trademarks
+of the copyright holder.
+
+6. Third-party components
+This software depends on third-party components (including but not limited
+to faster-whisper, OpenAI Whisper model weights, Tauri, enigo, and the
+Python and Rust ecosystems) which are distributed under their own licenses.
+Your use of those components is governed by their respective licenses.
+
+7. No warranty
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE,
+ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+8. Termination
+Any breach of clause 3 automatically and immediately terminates the
+rights granted to the breaching party under this license.
