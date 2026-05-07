@@ -126,6 +126,22 @@ function toggle() {
   else startRecording();
 }
 
+// Theme toggle: persist override, otherwise follow OS
+const prefersLight = window.matchMedia("(prefers-color-scheme: light)");
+function applyTheme(theme) {
+  document.body.setAttribute("data-theme", theme);
+}
+const savedTheme = localStorage.getItem("bf_theme");
+applyTheme(savedTheme === "light" || savedTheme === "dark" ? savedTheme : (prefersLight.matches ? "light" : "dark"));
+prefersLight.addEventListener("change", (e) => {
+  if (!localStorage.getItem("bf_theme")) applyTheme(e.matches ? "light" : "dark");
+});
+document.getElementById("theme-toggle").addEventListener("click", () => {
+  const next = document.body.getAttribute("data-theme") === "light" ? "dark" : "light";
+  applyTheme(next);
+  localStorage.setItem("bf_theme", next);
+});
+
 // Hotkey (Ctrl+Space) from Rust
 await listen("hotkey-pressed", toggle);
 
